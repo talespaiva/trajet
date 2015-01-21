@@ -13,14 +13,16 @@
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 </head>
 <body>
 
-<div data-role="page">
+<!-- Page 1 -->
+<div data-role="page" id="welcome">
 
 	<div data-role="header">
-		<h1>Page Title</h1>
-        <a id='geoIcon' href="#" data-icon="location" class="ui-btn-right">Geo...</a>
+		<h1>Hello</h1>
 	</div><!-- /header -->
 
 	<div data-role="content">
@@ -28,20 +30,43 @@
         <p id="geoChecking">Checking HTML5 geolocation availability...</p>
         <div id="geoSuccess" style="display: none">
             <p>Your browser supports geolocation!</p>
-			<p id="demo"></p>
-            <button class="ui-btn ui-icon-location ui-btn-icon-left">Start tracking</button>
+			<p id="latlon"></p>
+            <button id="startButton" href="#track" class="ui-btn ui-icon-location ui-btn-icon-left">Start tracking</button>
         </div>
-        <p id="geoFail" style="display: none">Your browser does NOT supports geolocation!</p>
+        <p id="geoFail" style="display: none">Your browser does NOT support geolocation!</p>
 	</div><!-- /content -->
 
 	<div data-role="footer" data-position="fixed">
 		<h4>liglab.fr</h4>
-	</div><!-- /footer http://nativedroid.godesign.ch -->
+	</div><!-- /footer -->
 </div><!-- /page -->
 
-<script>
-var x = document.getElementById("demo");
 
+<!-- Page 2 -->
+<div data-role="page" id="track">
+
+	<div data-role="header">
+		<h1>Track</h1>
+        <a id='geoIcon' href="#" data-icon="location" class="ui-btn-right">Geo...</a>
+	</div><!-- /header -->
+
+	<div data-role="content">
+		<div id="map"></div>
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed">
+		<h4>liglab.fr</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+<script>
+// Store object
+var storeObject = {
+    lat : null,
+    lon : null
+}
+var latlon = document.getElementById("latlon");
 
 if (Modernizr.geolocation) {
     $('#geoChecking').hide();
@@ -53,25 +78,36 @@ if (Modernizr.geolocation) {
 }
 
 function showPosition(position) {
-    x.innerHTML = "Latitude: " + position.coords.latitude + 
-    "<br>Longitude: " + position.coords.longitude;	
+    latlon.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude;
+
 }
 
-function hideAddressBar()
-{
-  if(!window.location.hash)
-  {
-      if(document.height < window.outerHeight)
-      {
-          document.body.style.height = (window.outerHeight + 50) + 'px';
-      }
+$(document).on('pagebeforeshow', '#map', function(){       
+    $(document).on('click', '#startButton', function(){     
+        // store some data
+        storeObject.lat = position.coords.latitude;
+		storeObject.lon = position.coords.longitude;
+        //Change page
+        $.mobile.changePage("#track");
+    });    
+});
 
-      setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
-  }
-}
+$(document).on('pagebeforeshow', '#track', function(){     
+    // create a map in the "map" div, set the view to a given place and zoom
+	var map = L.map('map').setView([storeObject.lat, storeObject.lon], 13);
 
-window.addEventListener("load", function(){ if(!window.pageYOffset){ hideAddressBar(); } } );
-window.addEventListener("orientationchange", hideAddressBar );
+	// add an OpenStreetMap tile layer
+	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(map);
+
+	// add a marker in the given location, attach some popup content to it and open the popup
+	L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
+		.bindPopup('I think you\'re here')
+		.openPopup();
+});
+
 </script>
 
 </body>
