@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="themes/green.min.css" />
+    <link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+</head>
+<body>
+
+<div data-role="page">
+
+	<div data-role="header">
+		<h1>Page Title</h1>
+        <a id='geoIcon' href="#" data-icon="location" class="ui-btn-right">Geo...</a>
+	</div><!-- /header -->
+
+	<div data-role="content">
+		<p>Welcome!</p>
+        <p id="geoChecking">Checking HTML5 geolocation availability...</p>
+        <div id="geoSuccess" style="display: none">
+            <p>Your browser supports geolocation!</p>
+			<p id="demo"></p>
+            <button class="ui-btn ui-icon-location ui-btn-icon-left">Start tracking</button>
+        </div>
+        <p id="geoFail" style="display: none">Your browser does NOT supports geolocation!</p>
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed">
+		<h4>liglab.fr</h4>
+	</div><!-- /footer http://nativedroid.godesign.ch -->
+</div><!-- /page -->
+
+<script>
+var x = document.getElementById("demo");
+
+
+if (Modernizr.geolocation) {
+    $('#geoChecking').hide();
+    $('#geoSuccess').show();
+	navigator.geolocation.getCurrentPosition(showPosition);
+} else {
+    $('#geoChecking').hide();
+    $('#geoFail').show();
+}
+
+function showPosition(position) {
+    x.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude;	
+}
+
+function hideAddressBar()
+{
+  if(!window.location.hash)
+  {
+      if(document.height < window.outerHeight)
+      {
+          document.body.style.height = (window.outerHeight + 50) + 'px';
+      }
+
+      setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
+  }
+}
+
+window.addEventListener("load", function(){ if(!window.pageYOffset){ hideAddressBar(); } } );
+window.addEventListener("orientationchange", hideAddressBar );
+</script>
+
+</body>
+</html>
