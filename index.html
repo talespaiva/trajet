@@ -56,6 +56,11 @@
 
 	<div data-role="content">
 		<div id="map" style="height: 400px"></div>
+		<div id="details" style="font-size: x-small">
+			<span id="det-lat"></span>
+			<span id="det-lon"></span>
+			<span id="det-acc"></span>
+		</div>
 	</div><!-- /content -->
 
 	<div data-role="footer" data-position="fixed">
@@ -67,8 +72,9 @@
 <script>
 // Store object
 var storeObject = {
-    lat : null,
-    lon : null
+    latitude : null,
+    longitude : null,
+	accuracy : null
 }
 
 var geoOptions = {
@@ -107,8 +113,9 @@ function geoSuccess(position) {
 }
 
 function savePosition(position) {
-	storeObject.lat = position.coords.latitude;
-	storeObject.lon = position.coords.longitude;
+	storeObject.latitude = position.coords.latitude;
+	storeObject.longitude = position.coords.longitude;
+	storeObject.accuracy = position.coords.accuracy;
 }
 
 $(document).on('click', '#startButton', function(){     
@@ -116,8 +123,12 @@ $(document).on('click', '#startButton', function(){
 }); 
 
 jQuery( "#track" ).on( "pageshow", function( event ) {
-	if (storeObject.lat != null && storeObject.lon != null){
-		showMap(storeObject.lat, storeObject.lon);
+	if (storeObject.latitude != null && storeObject.longitude != null){
+		showMap(storeObject.latitude, storeObject.longitude);
+		
+		$( "#det-lat" ).text("lat: "+storeObject.latitude);
+		$( "#det-lon" ).text("lon: "+storeObject.longitude);
+		$( "#det-acc" ).text("accuracy: "+storeObject.accuracy);
 	}
 } )
 
