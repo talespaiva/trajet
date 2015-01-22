@@ -71,6 +71,11 @@ var storeObject = {
     lon : null
 }
 
+var geoOptions = {
+  enableHighAccuracy: true,
+  maximumAge: 0
+};
+
 jQuery( "#welcome" ).on( "pageshow", function( event ) {
 	if (Modernizr.geolocation) {
 		$('#geoChecking').hide();
@@ -81,14 +86,18 @@ jQuery( "#welcome" ).on( "pageshow", function( event ) {
 			textonly: false
     	});
 		
-		navigator.geolocation.getCurrentPosition(updatePosition);
+		navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
 	} else {
 		$('#geoChecking').hide();
 		$('#geoFail').show();
 	}
 });
 
-function updatePosition(position) {
+function geoError(err) {
+	console.warn('ERROR(' + err.code + '): ' + err.message);
+};
+
+function geoSuccess(position) {
 	$.mobile.loading( "hide" );
 	savePosition(position);
 	var latlon = document.getElementById("latlon");
