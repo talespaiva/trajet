@@ -84,7 +84,8 @@ if (Modernizr.geolocation) {
 function updatePosition(position) {
 	savePosition(position);
 	latlon.innerHTML = "Latitude: " + position.coords.latitude + 
-	"<br>Longitude: " + position.coords.longitude;
+	"<br>Longitude: " + position.coords.longitude +
+	"<br>Accuracy: " + position.coords.accuracy + " meters";
 }
 
 function savePosition(position) {
