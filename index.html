@@ -83,6 +83,7 @@ var geoOptions = {
 };
 
 var map = L.map('map');
+var currentPositionMarker = L.marker();
 
 jQuery( "#welcome" ).on( "pageshow", function( event ) {
 	if (Modernizr.geolocation) {
@@ -142,7 +143,7 @@ function showMap(lat, lon){
 	}).addTo(map);
 
 	// add a marker in the given location, attach some popup content to it and open the popup
-	L.marker([lat, lon]).addTo(map)
+	currentPositionMarker.setLatLng([lat, lon]).addTo(map)
 		.bindPopup('I think you\'re here')
 		.openPopup();
 }
