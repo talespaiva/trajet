@@ -55,7 +55,7 @@
 	</div><!-- /header -->
 
 	<div data-role="content">
-		<div id="map" style="height: 400px"></div>
+		<div id="map" style="height: 380px"></div>
 		<div id="details" style="font-size: x-small">
 			<span id="det-lat"></span>
 			<span id="det-lon"></span>
@@ -81,6 +81,8 @@ var geoOptions = {
   enableHighAccuracy: true,
   maximumAge: 0
 };
+
+var map = L.map('map');
 
 jQuery( "#welcome" ).on( "pageshow", function( event ) {
 	if (Modernizr.geolocation) {
@@ -123,18 +125,16 @@ $(document).on('click', '#startButton', function(){
 }); 
 
 jQuery( "#track" ).on( "pageshow", function( event ) {
-	if (storeObject.latitude != null && storeObject.longitude != null){
-		showMap(storeObject.latitude, storeObject.longitude);
-		
-		$( "#det-lat" ).text("lat: "+storeObject.latitude);
-		$( "#det-lon" ).text("lon: "+storeObject.longitude);
-		$( "#det-acc" ).text("accuracy: "+storeObject.accuracy);
-	}
+	showMap(storeObject.latitude, storeObject.longitude);
+	
+	$( "#det-lat" ).text("lat: "+storeObject.latitude);
+	$( "#det-lon" ).text("lon: "+storeObject.longitude);
+	$( "#det-acc" ).text("accuracy: "+storeObject.accuracy);
 } )
 
 function showMap(lat, lon){
     // create a map in the "map" div, set the view to a given place and zoom
-	var map = L.map('map').setView([lat, lon], 13);
+	map.setView([lat, lon], 13);
 
 	// add an OpenStreetMap tile layer
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
