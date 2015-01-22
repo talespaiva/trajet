@@ -70,19 +70,28 @@ var storeObject = {
     lat : null,
     lon : null
 }
-var latlon = document.getElementById("latlon");
 
-if (Modernizr.geolocation) {
-    $('#geoChecking').hide();
-    $('#geoSuccess').show();
-	navigator.geolocation.getCurrentPosition(updatePosition);
-} else {
-    $('#geoChecking').hide();
-    $('#geoFail').show();
-}
+jQuery( "#welcome" ).on( "pageshow", function( event ) {
+	if (Modernizr.geolocation) {
+		$('#geoChecking').hide();
+		$('#geoSuccess').show();
+		$.mobile.loading( "show", {
+			text: "Getting location...",
+			textVisible: true,
+			textonly: false
+    	});
+		
+		navigator.geolocation.getCurrentPosition(updatePosition);
+	} else {
+		$('#geoChecking').hide();
+		$('#geoFail').show();
+	}
+});
 
 function updatePosition(position) {
+	$.mobile.loading( "hide" );
 	savePosition(position);
+	var latlon = document.getElementById("latlon");
 	latlon.innerHTML = "Latitude: " + position.coords.latitude + 
 	"<br>Longitude: " + position.coords.longitude +
 	"<br>Accuracy: " + position.coords.accuracy + " meters";
