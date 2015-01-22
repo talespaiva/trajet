@@ -27,12 +27,16 @@
 
 	<div data-role="content">
 		<p>Welcome!</p>
+		
         <p id="geoChecking">Checking HTML5 geolocation availability...</p>
+		
         <div id="geoSuccess" style="display: none">
             <p>Your browser supports geolocation!</p>
 			<p id="latlon"></p>
             <button id="startButton" href="#track" class="ui-btn ui-icon-location ui-btn-icon-left">Start tracking</button>
         </div>
+		
+		
         <p id="geoFail" style="display: none">Your browser does NOT support geolocation!</p>
 	</div><!-- /content -->
 
@@ -51,7 +55,7 @@
 	</div><!-- /header -->
 
 	<div data-role="content">
-		<div id="map"></div>
+		<div id="map" style="height: 400px"></div>
 	</div><!-- /content -->
 
 	<div data-role="footer" data-position="fixed">
@@ -71,31 +75,36 @@ var latlon = document.getElementById("latlon");
 if (Modernizr.geolocation) {
     $('#geoChecking').hide();
     $('#geoSuccess').show();
-	navigator.geolocation.getCurrentPosition(showPosition);
+	navigator.geolocation.getCurrentPosition(updatePosition);
 } else {
     $('#geoChecking').hide();
     $('#geoFail').show();
 }
 
-function showPosition(position) {
-    latlon.innerHTML = "Latitude: " + position.coords.latitude + 
-    "<br>Longitude: " + position.coords.longitude;
-
+function updatePosition(position) {
+	savePosition(position);
+	latlon.innerHTML = "Latitude: " + position.coords.latitude + 
+	"<br>Longitude: " + position.coords.longitude;
 }
 
-$(document).on('pagebeforeshow', '#map', function(){       
-    $(document).on('click', '#startButton', function(){     
-        // store some data
-        storeObject.lat = position.coords.latitude;
-		storeObject.lon = position.coords.longitude;
-        //Change page
-        $.mobile.changePage("#track");
-    });    
-});
+function savePosition(position) {
+	storeObject.lat = position.coords.latitude;
+	storeObject.lon = position.coords.longitude;
+}
 
-$(document).on('pagebeforeshow', '#track', function(){     
+$(document).on('click', '#startButton', function(){     
+	$.mobile.changePage("#track");
+}); 
+
+jQuery( "#track" ).on( "pageshow", function( event ) {
+	if (storeObject.lat != null && storeObject.lon != null){
+		showMap(storeObject.lat, storeObject.lon);
+	}
+} )
+
+function showMap(lat, lon){
     // create a map in the "map" div, set the view to a given place and zoom
-	var map = L.map('map').setView([storeObject.lat, storeObject.lon], 13);
+	var map = L.map('map').setView([lat, lon], 13);
 
 	// add an OpenStreetMap tile layer
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -103,10 +112,10 @@ $(document).on('pagebeforeshow', '#track', function(){
 	}).addTo(map);
 
 	// add a marker in the given location, attach some popup content to it and open the popup
-	L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
+	L.marker([lat, lon]).addTo(map)
 		.bindPopup('I think you\'re here')
 		.openPopup();
-});
+}
 
 </script>
 
