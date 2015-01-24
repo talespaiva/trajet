@@ -51,7 +51,6 @@
 
 	<div data-role="header">
 		<h1>Track</h1>
-        <a id='geoIcon' href="#" data-icon="location" class="ui-btn-right">Geo...</a>
 	</div><!-- /header -->
 
 	<div data-role="content">
@@ -79,11 +78,13 @@ var storeObject = {
 
 var geoOptions = {
   enableHighAccuracy: true,
-  maximumAge: 0
+  maximumAge: 0,
+  frequency: 1
 };
 
 var map = L.map('map');
 var currentPositionMarker = L.marker();
+var accuracyCircle = L.circle();
 
 jQuery( "#welcome" ).on( "pageshow", function( event ) {
 	if (Modernizr.geolocation) {
@@ -126,14 +127,14 @@ $(document).on('click', '#startButton', function(){
 }); 
 
 jQuery( "#track" ).on( "pageshow", function( event ) {
-	showMap(storeObject.latitude, storeObject.longitude);
+	showMap(storeObject.latitude, storeObject.longitude, storeObject.accuracy);
 	
 	$( "#det-lat" ).text("lat: "+storeObject.latitude);
 	$( "#det-lon" ).text("lon: "+storeObject.longitude);
-	$( "#det-acc" ).text("accuracy: "+storeObject.accuracy);
+	$( "#det-acc" ).text("accuracy: "+storeObject.accuracy+"m");
 } )
 
-function showMap(lat, lon){
+function showMap(lat, lon, acc){
     // create a map in the "map" div, set the view to a given place and zoom
 	map.setView([lat, lon], 13);
 
@@ -146,6 +147,8 @@ function showMap(lat, lon){
 	currentPositionMarker.setLatLng([lat, lon]).addTo(map)
 		.bindPopup('I think you\'re here')
 		.openPopup();
+	
+	accuracyCircle.setLatLng([lat, lon]).setRadius(acc).addTo(map);
 }
 
 </script>
