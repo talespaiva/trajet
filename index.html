@@ -127,7 +127,7 @@ $(document).on('click', '#startButton', function(){
 }); 
 
 jQuery( "#track" ).on( "pageshow", function( event ) {
-	showMap(storeObject.latitude, storeObject.longitude, storeObject.accuracy);
+	setupMap(storeObject.latitude, storeObject.longitude, storeObject.accuracy);
 	
 	var watchID = navigator.geolocation.watchPosition(updateLocation, geoError, geoOptions);
 	
@@ -138,14 +138,14 @@ jQuery( "#track" ).on( "pageshow", function( event ) {
 
 function updateLocation(position){
 	savePosition(position)
-	showMap(storeObject.latitude, storeObject.longitude, storeObject.accuracy);
+	updateMap(storeObject.latitude, storeObject.longitude, storeObject.accuracy);
 		
 	$( "#det-lat" ).text("lat: "+storeObject.latitude);
 	$( "#det-lon" ).text("lon: "+storeObject.longitude);
 	$( "#det-acc" ).text("accuracy: "+storeObject.accuracy+"m");
 }
 
-function showMap(lat, lon, acc){
+function setupMap(lat, lon, acc){
     map.setView([lat, lon], 18);
 
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -157,6 +157,12 @@ function showMap(lat, lon, acc){
 		.openPopup();
 	
 	accuracyCircle.setLatLng([lat, lon]).setRadius(acc).addTo(map);
+}
+
+function updateMap(lat, lon, acc){
+	map.setView([lat, lon]);
+	currentPositionMarker.setLatLng([lat, lon]);
+	accuracyCircle.setLatLng([lat, lon]).setRadius(acc);
 }
 
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
