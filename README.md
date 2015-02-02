@@ -11,3 +11,5 @@ Frameworks and technologies:
 - Leaflet 0.7.3
 
 - HTML5 Geolocation
+
+- OpenStreetMaps
