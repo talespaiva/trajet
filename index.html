@@ -68,11 +68,6 @@
 
 	<div data-role="content">
 		<div id="map" style="height: 380px"></div>
-		<div id="details" style="font-size: x-small">
-			<span id="det-lat"></span>
-			<span id="det-lon"></span>
-			<span id="det-acc"></span>
-		</div>
 	</div><!-- /content -->
 
 	<div data-role="footer" data-position="fixed">
@@ -146,25 +141,25 @@ jQuery( "#track" ).on( "pageshow", function( event ) {
 	
 	var watchID = navigator.geolocation.watchPosition(updateLocation, geoError, geoOptions);
 	
-	$( "#det-lat" ).text("lat: "+storeObject.latitude);
-	$( "#det-lon" ).text("lon: "+storeObject.longitude);
-	$( "#det-acc" ).text("accuracy: "+storeObject.accuracy+"m");
+	$( "#map-lat" ).text(storeObject.latitude+', ');
+	$( "#map-lon" ).text(storeObject.longitude);
+	$( "#map-acc" ).text("+/- "+storeObject.accuracy+"m");
 } );
 
 function updateLocation(position){
 	savePosition(position)
 	updateMap(storeObject.latitude, storeObject.longitude, storeObject.accuracy);
 		
-	$( "#det-lat" ).text("lat: "+storeObject.latitude);
-	$( "#det-lon" ).text("lon: "+storeObject.longitude);
-	$( "#det-acc" ).text("accuracy: "+storeObject.accuracy+"m");
+	$( "#map-lat" ).text("lat: "+storeObject.latitude);
+	$( "#map-lon" ).text("lon: "+storeObject.longitude);
+	$( "#map-acc" ).text("accuracy: "+storeObject.accuracy+"m");
 }
 
 function setupMap(lat, lon, acc){
     map.setView([lat, lon], 18);
 
 	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		attribution: '&copy; <span id=\'map-lat\'></span> <span id=\'map-lon\'></span> <span id=\'map-acc\'></span>'
 	}).addTo(map);
 
 	currentPositionMarker.setLatLng([lat, lon]).addTo(map)
