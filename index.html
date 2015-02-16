@@ -150,9 +150,9 @@ function updateLocation(position){
 	savePosition(position)
 	updateMap(storeObject.latitude, storeObject.longitude, storeObject.accuracy);
 		
-	$( "#map-lat" ).text("lat: "+storeObject.latitude);
-	$( "#map-lon" ).text("lon: "+storeObject.longitude);
-	$( "#map-acc" ).text("accuracy: "+storeObject.accuracy+"m");
+	$( "#map-lat" ).text(storeObject.latitude+', ');
+	$( "#map-lon" ).text(storeObject.longitude);
+	$( "#map-acc" ).text("+/- "+storeObject.accuracy+"m");
 }
 
 function setupMap(lat, lon, acc){
