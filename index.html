@@ -143,7 +143,7 @@ jQuery( "#track" ).on( "pageshow", function( event ) {
 	
 	$( "#map-lat" ).text(storeObject.latitude+', ');
 	$( "#map-lon" ).text(storeObject.longitude);
-	$( "#map-acc" ).text("+/- "+storeObject.accuracy+"m");
+	$( "#map-acc" ).text("+/- "+storeObject.accuracy.toFixed(1)+"m");
 } );
 
 function updateLocation(position){
@@ -152,7 +152,7 @@ function updateLocation(position){
 		
 	$( "#map-lat" ).text(storeObject.latitude+', ');
 	$( "#map-lon" ).text(storeObject.longitude);
-	$( "#map-acc" ).text("+/- "+storeObject.accuracy+"m");
+	$( "#map-acc" ).text("+/- "+storeObject.accuracy.toFixed(1)+"m");
 }
 
 function setupMap(lat, lon, acc){
